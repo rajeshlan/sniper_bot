@@ -1,16 +1,22 @@
 Sniper Bot Project
+
 Project Overview
+
 The Sniper Bot is an automated trading bot designed for rapid token sniping on decentralized exchanges such as Uniswap and PancakeSwap. It facilitates the buying of newly listed tokens quickly to take advantage of price surges, making it an invaluable tool for traders looking to capitalize on early opportunities in the cryptocurrency market.
 
 Features
+
 Token Sniping: Automatically buy newly listed tokens within milliseconds of their launch.
 Multi-Exchange Support: Operates on both Uniswap (Ethereum) and PancakeSwap (Binance Smart Chain).
 Monitoring: Continuously monitors for new token listings and price movements.
 Wallet Management: Securely manages wallet operations and transactions.
 Transaction Handling: Efficiently handles buying and selling operations with comprehensive logging for analysis.
+
 Directory Structure
+
 graphql
-Copy code
+
+
 sniper-bot/
 ├── .env                            # Environment variables file
 ├── sniper_bot.py                   # Main entry point to run the sniper bot
@@ -36,23 +42,26 @@ sniper-bot/
 │   └── transaction.py              # Manage buying and selling transactions with smart contracts
 ├── markdown/                       # Documentation (e.g., README, guides, etc.)
 │   └── README.md                   # Project documentation
+
+
 Script Descriptions
+
 1. .env
 This file contains environment variables, including sensitive data such as wallet private keys and API keys. Make sure to keep this file secure and never expose it publicly.
 
-2. sniper_bot.py
+3. sniper_bot.py
 This is the main entry point for running the sniper bot. It initializes the bot, loads configurations, and starts the monitoring and sniping processes.
 
-3. config.py
+5. config.py
 This configuration file manages settings such as token addresses, slippage percentages, and API endpoints. It allows for easy adjustments to the bot's behavior without modifying the codebase.
 
-4. sniper.py
+7. sniper.py
 This script contains the core logic for the sniping process. It monitors token listings and executes buy orders based on predefined criteria, ensuring that the bot can react quickly to market changes.
 
-5. requirements.txt
+9. requirements.txt
 A list of required Python packages and their versions necessary for running the sniper bot. Use this file to install dependencies with pip.
 
-6. logs/
+11. logs/
 This directory stores log files that capture bot activities, including transactions, errors, and operational messages, which are useful for debugging and analysis.
 
 - sniper_bot.log
@@ -110,40 +119,62 @@ This directory contains documentation for the project, including guides and the 
 The main documentation file providing an overview of the project, installation instructions, and usage guidelines.
 
 Getting Started
+
 Prerequisites
+
 Python 3.6 or higher
+
 Required Python libraries (listed in requirements.txt)
+
 An Ethereum wallet address and private key
+
 A Binance Smart Chain wallet address and private key (if using PancakeSwap)
+
 Installation
+
 Clone the repository to your local machine:
 
-bash
-Copy code
+
+
 git clone https://github.com/yourusername/sniper-bot.git
+
 cd sniper-bot
+
 Install the required Python packages:
 
-bash
-Copy code
+
 pip install -r requirements.txt
+
 Create a .env file in the project root and add your API keys and wallet details:
 
-plaintext
-Copy code
-INFURA_URL=your_infura_url
-PANCAKESWAP_ROUTER_ADDRESS=your_pancakeswap_router_address
-UNISWAP_ROUTER_ADDRESS=your_uniswap_router_address
-WALLET_ADDRESS=your_wallet_address
-PRIVATE_KEY=your_private_key
+
+INFURA_PROJECT_ID=___
+PRIVATE_KEY=__ #metamask
+WALLET_ADDRESS=--- #testnet wallet
+BSC_NODE_URL=https://bsc-dataseed.binance.org/
+MAX_INVESTMENT_AMOUNT=0.01
+STOP_LOSS_PERCENTAGE = 0.01
+MAX_TOKENS = 5  # Maximum number of tokens to hold
+ETHERSCAN_API_KEY =---
+BSCSCAN_API_KEY =--
+INFURA_URL=https://mainnet.infura.io/v3/----
+SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
+
+
 Running the Bot
+
 To start the sniper bot, execute the following command:
 
-bash
-Copy code
 python sniper_bot.py
+
 Example Usage
+
 The bot will connect to the specified exchanges and begin monitoring for new token listings.
+
 It will automatically execute buy orders when it detects a new listing based on your configured criteria.
+
 Contributing
+
 Contributions are welcome! Please fork the repository and submit a pull request for any features or fixes.
+
+
