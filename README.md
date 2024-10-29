@@ -118,16 +118,27 @@ Create a .env file in the project root and add your API keys and wallet details:
 
 
 INFURA_PROJECT_ID=___
+
 PRIVATE_KEY=__ #metamask
+
 WALLET_ADDRESS=--- #testnet wallet
+
 BSC_NODE_URL=https://bsc-dataseed.binance.org/
+
 MAX_INVESTMENT_AMOUNT=0.01
+
 STOP_LOSS_PERCENTAGE = 0.01
+
 MAX_TOKENS = 5  # Maximum number of tokens to hold
+
 ETHERSCAN_API_KEY =---
+
 BSCSCAN_API_KEY =--
+
 INFURA_URL=https://mainnet.infura.io/v3/----
+
 SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
+
 
 
 Running the Bot
