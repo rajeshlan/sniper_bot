@@ -1,3 +1,4 @@
+# utils/monitor.py
 import logging
 import time
 import requests
@@ -108,7 +109,6 @@ class Monitoring:
         except Exception as e:
             logging.error(f"Failed to process event from {dex_name}: {e}")
 
-
 if __name__ == "__main__":
     eth_url = f"https://mainnet.infura.io/v3/{os.getenv('INFURA_PROJECT_ID')}"
     bsc_url = os.getenv('BSC_NODE_URL')
@@ -125,4 +125,4 @@ if __name__ == "__main__":
         etherscan_api_key=etherscan_api_key,
         bscscan_api_key=bscscan_api_key
     )
-    monitor.monitor_new_tokens()  # Corrected to call the method directly
+    monitor.monitor_new_tokens()  # Call the method directly

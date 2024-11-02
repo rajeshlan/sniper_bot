@@ -20,6 +20,6 @@ sniper-bot/
 ├── modules/                  # Core functionality and analysis
 │   ├── analyzer.py           # Analyze tokens
 │   ├── check_balance.py      # Check balance of tokens
-│   └── transaction.py        # Manage buying and selling transactions
+│   └── transaction.py(not created yet)        # Manage buying and selling transactions
 ├── markdown/                 # Documentation (e.g., README, guides, etc.)
 │   └── README.md             # Project documentation

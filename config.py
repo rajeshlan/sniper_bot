@@ -1,3 +1,5 @@
+# config.py
+
 import os
 import logging
 from dotenv import load_dotenv
@@ -8,16 +10,21 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # Load environment variables
 load_dotenv()
 
-# Load configuration variables from environment
+# Load and validate configuration variables
 WALLET_ADDRESS = os.getenv("WALLET_ADDRESS")
 PRIVATE_KEY = os.getenv("PRIVATE_KEY")
-MAX_INVESTMENT_AMOUNT = os.getenv("MAX_INVESTMENT_AMOUNT")  # Maximum investment amount
-ETHERSCAN_API_KEY = os.getenv("ETHERSCAN_API_KEY")          # Etherscan API key
-BSCSCAN_API_KEY = os.getenv("BSCSCAN_API_KEY")              # BscScan API key
-SOLANA_RPC_URL = os.getenv("SOLANA_RPC_URL")                # Solana RPC URL
+MAX_INVESTMENT_AMOUNT = float(os.getenv("MAX_INVESTMENT_AMOUNT", 0.01))
+ETHERSCAN_API_KEY = os.getenv("ETHERSCAN_API_KEY")
+BSCSCAN_API_KEY = os.getenv("BSCSCAN_API_KEY")
+SOLANA_RPC_URL = os.getenv("SOLANA_RPC_URL")
+INFURA_PROJECT_ID = os.getenv("INFURA_PROJECT_ID")
+BSC_NODE_URL = os.getenv("BSC_NODE_URL")
 
-# Log the results
-if all([WALLET_ADDRESS, PRIVATE_KEY, MAX_INVESTMENT_AMOUNT, ETHERSCAN_API_KEY, BSCSCAN_API_KEY]):
-    logging.info("Environment variables loaded successfully.")
+# Check for missing required variables
+required_vars = ["WALLET_ADDRESS", "PRIVATE_KEY", "ETHERSCAN_API_KEY", "BSCSCAN_API_KEY", "SOLANA_RPC_URL"]
+missing_vars = [var for var in required_vars if not locals().get(var)]
+
+if missing_vars:
+    logging.error(f"Missing required environment variables: {', '.join(missing_vars)}")
 else:
-    logging.error("Failed to load environment variables. Check your .env file.")
+    logging.info("Environment variables loaded successfully.")

@@ -1,34 +1,27 @@
-#python -m utils.snipe
+# utils/snipe.py
 
 import logging
 import time
 import requests
 from web3 import Web3
-from modules.analyzer import analyze_token
+from utils.blockchain import Blockchain
 from utils.wallet import buy_token
 from utils.monitor import Monitoring
-from config import (WALLET_ADDRESS, PRIVATE_KEY, MAX_INVESTMENT_AMOUNT,
+from modules.analyzer import analyze_token
+from config import (BSC_NODE_URL, WALLET_ADDRESS, PRIVATE_KEY, MAX_INVESTMENT_AMOUNT, 
                     ETHERSCAN_API_KEY, BSCSCAN_API_KEY)
 
 # Configure logging
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 def fetch_abi_from_scan(chain, contract_address, retries=3, delay=5):
-    """
-    Fetch the ABI of a contract from Etherscan or BscScan.
-    
-    :param chain: 'ethereum' or 'bsc' to determine which scan service to use.
-    :param contract_address: The address of the contract.
-    :param retries: Number of retries on failure.
-    :param delay: Delay between retries.
-    :return: ABI JSON as a string or None if failed to fetch.
-    """
+    """Fetch the ABI of a contract from Etherscan or BscScan."""
     api_key = ETHERSCAN_API_KEY if chain == "ethereum" else BSCSCAN_API_KEY
     scan_url = {
         "ethereum": f"https://api.etherscan.io/api?module=contract&action=getabi&address={contract_address}&apikey={api_key}",
         "bsc": f"https://api.bscscan.com/api?module=contract&action=getabi&address={contract_address}&apikey={api_key}"
-    }.get(chain, None)
+    }.get(chain)
 
     if not scan_url:
         logging.error("Unsupported chain type.")
@@ -38,14 +31,12 @@ def fetch_abi_from_scan(chain, contract_address, retries=3, delay=5):
         try:
             response = requests.get(scan_url)
             data = response.json()
-
             if data.get("status") == "1":
                 logging.info(f"Successfully fetched ABI for {contract_address} on {chain}.")
                 return data["result"]
             else:
                 logging.warning(f"Attempt {attempt}/{retries} failed: {data.get('message', 'Unknown error')}")
                 time.sleep(delay)
-
         except Exception as e:
             logging.error(f"Error fetching ABI: {str(e)} - Attempt {attempt}/{retries}")
             time.sleep(delay)
@@ -53,15 +44,9 @@ def fetch_abi_from_scan(chain, contract_address, retries=3, delay=5):
     logging.error(f"Failed to fetch ABI for {contract_address} on {chain} after {retries} attempts.")
     return None
 
+
 def connect_to_blockchain(provider_url, retries=3, delay=5):
-    """
-    Connect to a blockchain provider and return the Web3 object.
-    
-    :param provider_url: URL of the blockchain provider.
-    :param retries: Number of retries on connection failure.
-    :param delay: Delay between retries.
-    :return: Web3 provider object if successful, None otherwise.
-    """
+    """Connect to a blockchain provider and return the Web3 object."""
     for attempt in range(1, retries + 1):
         provider = Web3(Web3.HTTPProvider(provider_url))
         if provider.is_connected():
@@ -74,19 +59,11 @@ def connect_to_blockchain(provider_url, retries=3, delay=5):
     logging.error(f"Failed to connect to the blockchain at {provider_url} after {retries} attempts.")
     return None
 
-def snipe_tokens(provider, router_address, chain, max_attempts=5, delay_between_attempts=10):
-    """
-    Monitor and snipe tokens based on liquidity events.
 
-    :param provider: Web3 provider connected to the blockchain.
-    :param router_address: Address of the DEX router.
-    :param chain: 'ethereum' or 'bsc' to determine which chain is used.
-    :param max_attempts: Maximum attempts to retry sniping a token.
-    :param delay_between_attempts: Delay between retry attempts.
-    """
+def snipe_tokens(provider, router_address, chain, max_attempts=5, delay_between_attempts=10):
+    """Monitor and snipe tokens based on liquidity events."""
     logging.info("Starting token sniping process...")
 
-    # Automatically fetch ABI for the router
     router_abi = fetch_abi_from_scan(chain, router_address)
     if not router_abi:
         logging.error("Failed to fetch router ABI. Exiting.")
@@ -138,24 +115,22 @@ def snipe_tokens(provider, router_address, chain, max_attempts=5, delay_between_
     except Exception as e:
         logging.error(f"Unexpected error in sniping process: {str(e)}")
 
+
 def main():
+    """Main entry point for the token sniping functionality."""
     logging.info("Token sniping functionality initialized.")
 
-    # Connect to the blockchain (Example: Binance Smart Chain / Ethereum)
-    bsc_provider_url = 'https://bsc-dataseed.binance.org/'
-    provider = connect_to_blockchain(bsc_provider_url)
+    provider = connect_to_blockchain(BSC_NODE_URL)
     
     if not provider:
         logging.error("Unable to initialize sniping due to provider connection issues.")
         return
 
-    # Replace with your router's actual address
     router_address = Web3.to_checksum_address('0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73')  # PancakeSwap example
-
-    # Determine the chain ('ethereum' or 'bsc')
-    chain = 'bsc' if 'bsc' in bsc_provider_url else 'ethereum'
+    chain = 'bsc' if 'bsc' in BSC_NODE_URL else 'ethereum'
 
     snipe_tokens(provider, router_address, chain)
+
 
 if __name__ == "__main__":
     main()
